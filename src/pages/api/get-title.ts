@@ -76,7 +76,7 @@ export default async function handler(
     parsedResponse = QuestionAndAnswerFormat.parse(
       JSON.parse(completion.choices[0].message.content || "{}")
     );
-  } catch (error) {
+  } catch {
     return res.status(500).json({
       message: "Failed to parse AI response",
       data: null,

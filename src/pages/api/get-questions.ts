@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import Groq from "groq-sdk";
-import { zodResponseFormat } from "openai/helpers/zod";
 import { z } from "zod";
 
 export const maxDuration = 20;
@@ -123,9 +122,9 @@ export default async function handler(
       const rawResponse = JSON.parse(completion.choices[0].message.content || "{}");
       
       // Transform the response to match our schema
-      const transformedQuestions = rawResponse.questions.map((q: any) => ({
+      const transformedQuestions = rawResponse.questions.map((q: { question: string; explanation: string; answers: { text: string; correct: boolean; counter_argument?: string }[] }) => ({
         ...q,
-        answers: q.answers.map((a: any) => ({
+        answers: q.answers.map((a: { text: string; correct: boolean; counter_argument?: string }) => ({
           text: a.text,
           isCorrect: a.correct, // Map 'correct' to 'isCorrect'
           counterArgument: a.counter_argument || "" // Map 'counter_argument' to 'counterArgument'
